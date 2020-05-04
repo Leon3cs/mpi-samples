@@ -5,7 +5,7 @@ Demonstration samples for MPI programs with basic message passing routines.
 ## Reference Material
 
 This repo was used for an college presentation, all the source material that I
-used for research and implementation of the example codes
+used for research and implementation of the example codes are all down below
 
 ### Book references
 
