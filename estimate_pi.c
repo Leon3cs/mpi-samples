@@ -20,7 +20,8 @@ int main(int argc, char *argv[])
   	  n,										// Number of intervals, the segments of area of the integrand
 	  myid,										// The id, or rank, of the process
 	  numprocs,									// The total of processes available
-	  i;										// Used for iterations on for loop
+	  i,										// Used for iterations on for loop
+  	  len;										// Length of the processos name
   double
   	  PI25DT = 3.141592653589793238462643;		// Reference value of pi
   double
@@ -29,10 +30,12 @@ int main(int argc, char *argv[])
 	  h,										// Constant to limit the range of the area segment
 	  sum,										// Accumulates the result of the function at point x
 	  x;										// The value of the function at some arbitrary point
-
+  char
+  	  hostname[MPI_MAX_PROCESSOR_NAME];			// Hostname of the process
   MPI_Init(&argc,&argv);						// Required function to every MPI program
   MPI_Comm_size(MPI_COMM_WORLD, &numprocs);		// Get the number of processes, or tasks, in the communications group
   MPI_Comm_rank(MPI_COMM_WORLD, &myid);			// Get the id, or rank, of the actual process
+  MPI_Get_processor_name(&hostname, &len);
 
   while (1) {
 	 /**
@@ -73,10 +76,10 @@ int main(int argc, char *argv[])
          for (i = myid + 1; i <= n; i += numprocs) {
              x = h * ((double)i - 0.5);														// Get the value of x, based on the length constant
              sum += (4.0 / (1.0 + x*x));													// Compute and sum the value of f(x)
-             printf("pid: %d | h: %f | i: %d | x: %f | sum: %f\n", myid, h, i, x, sum);
+             printf("%s is calculating a fraction of pi\n", hostname);
          }
          mypi = h * sum;																	// Estimate a fraction of pi based on the sum of all computed area segment by this process
-		 printf("> my pi: %f\n", mypi);
+
 
          /**
           * Get the estimated fractions of pi from all processes and send to the master process
